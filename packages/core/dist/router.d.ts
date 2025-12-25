@@ -7,5 +7,4 @@ export interface Router<T extends RouterRecord = RouterRecord> {
     };
 }
 export declare function router<T extends RouterRecord>(procedures: T): Router<T>;
-export declare function getProcedureFromPath(router: Router, path: string[]): ProcedureDef | null;
 //# sourceMappingURL=router.d.ts.map

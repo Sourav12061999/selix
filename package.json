@@ -6,6 +6,9 @@
     "packages/*",
     "examples/*"
   ],
+  "scripts": {
+    "build": "bun run --cwd packages/core build && bun run --cwd packages/adapter-express build && bun run --cwd packages/client build"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "@types/node": "^20.0.0"

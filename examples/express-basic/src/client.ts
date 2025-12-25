@@ -9,11 +9,11 @@ async function main() {
     console.log('Running client...');
 
     // Query
-    const hello = await client.hello.query({ name: 'World' });
+    const hello = await client.hello.query({ input: { name: "world" }, project: { greeting: 0 } });
     console.log('Result from hello:', hello);
 
     // Mutation
-    const added = await client.add.mutation({ a: 5, b: 10 });
+    const added = await client.add.mutation({ input: { a: 5, b: 10 }, project: { result: 1 } });
     console.log('Result from add:', added);
 }
 

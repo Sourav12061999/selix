@@ -1,4 +1,3 @@
-import { getProcedureFromPath } from '@selix/core';
 export function createExpressMiddleware({ router }) {
     return async (req, res, next) => {
         try {
@@ -7,13 +6,19 @@ export function createExpressMiddleware({ router }) {
             // Actually my client sends /procedureName.
             // req.path in express when mounted on /api, and called /api/hello, is /hello.
             const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-            const pathSegments = cleanPath.split('/').filter(Boolean);
-            const procedure = getProcedureFromPath(router, pathSegments);
+            const procedureName = cleanPath;
+            const procedure = router._def.procedures[procedureName];
             if (!procedure) {
                 res.status(404).json({ error: 'Procedure not found' });
                 return;
             }
-            // ProcedureDef is guaranteed if not null (helper returns ProcedureDef | null)
+            // Check if it's a procedure or a router (nested routers todo)
+            // For now assume flat router
+            if ('_def' in procedure) {
+                // Nested router, not supported in this simple version yet
+                res.status(501).json({ error: 'Nested routers not yet supported in adapter' });
+                return;
+            }
             const procDef = procedure;
             // Validate input
             const input = req.body;
