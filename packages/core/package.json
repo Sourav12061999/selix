@@ -1,0 +1,17 @@
+{
+    "name": "@selix/core",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "bun run build:ts",
+        "build:ts": "tsc"
+    },
+    "peerDependencies": {
+        "zod": "^3.0.0"
+    },
+    "devDependencies": {
+        "zod": "^3.22.0"
+    }
+}

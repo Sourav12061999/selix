@@ -1,0 +1,15 @@
+{
+    "name": "@selix/adapter-hono",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "bun run build:ts",
+        "build:ts": "tsc"
+    },
+    "dependencies": {
+        "@selix/core": "workspace:*",
+        "hono": "^4.11.2"
+    }
+}

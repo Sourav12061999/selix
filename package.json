@@ -1,0 +1,13 @@
+{
+  "name": "selix-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
