@@ -1,13 +1,36 @@
+
 import { z, ZodType } from "zod";
+import { applyProjection } from './projection';
 
 export type ProcedureType = 'query' | 'mutation';
 
 export type ProcedureResolver<InputType, OutputType> = (opts: { input: InputType }) => Promise<OutputType> | OutputType;
 
-export interface ProcedureDef<InputType = any, OutputType = any> {
+export class ProcedureDef<InputType = any, OutputType = any> {
     type: ProcedureType;
     input: ZodType<InputType>;
     resolver: ProcedureResolver<InputType, OutputType>;
+
+    constructor(
+        type: ProcedureType,
+        input: ZodType<InputType>,
+        resolver: ProcedureResolver<InputType, OutputType>
+    ) {
+        this.type = type;
+        this.input = input;
+        this.resolver = resolver;
+    }
+
+    async call(opts: { input: any; project?: any }) {
+        const parsedInput = this.input.parse(opts.input);
+        const result = await this.resolver({ input: parsedInput });
+
+        if (opts.project) {
+            return applyProjection(result, opts.project);
+        }
+
+        return result;
+    }
 }
 
 export class ProcedureBuilder<InputType = any> {
@@ -20,19 +43,19 @@ export class ProcedureBuilder<InputType = any> {
     }
 
     query<TOutput>(resolver: ProcedureResolver<InputType, TOutput>): ProcedureDef<InputType, TOutput> {
-        return {
-            type: 'query',
-            input: this._input as any ?? z.undefined(),
-            resolver,
-        }
+        return new ProcedureDef(
+            'query',
+            this._input as any ?? z.undefined(),
+            resolver
+        );
     }
 
     mutation<TOutput>(resolver: ProcedureResolver<InputType, TOutput>): ProcedureDef<InputType, TOutput> {
-        return {
-            type: 'mutation',
-            input: this._input as any ?? z.undefined(),
-            resolver,
-        }
+        return new ProcedureDef(
+            'mutation',
+            this._input as any ?? z.undefined(),
+            resolver
+        );
     }
 }
 

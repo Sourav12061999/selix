@@ -3,10 +3,15 @@ export type ProcedureType = 'query' | 'mutation';
 export type ProcedureResolver<InputType, OutputType> = (opts: {
     input: InputType;
 }) => Promise<OutputType> | OutputType;
-export interface ProcedureDef<InputType = any, OutputType = any> {
+export declare class ProcedureDef<InputType = any, OutputType = any> {
     type: ProcedureType;
     input: ZodType<InputType>;
     resolver: ProcedureResolver<InputType, OutputType>;
+    constructor(type: ProcedureType, input: ZodType<InputType>, resolver: ProcedureResolver<InputType, OutputType>);
+    call(opts: {
+        input: any;
+        project?: any;
+    }): Promise<any>;
 }
 export declare class ProcedureBuilder<InputType = any> {
     private _input?;

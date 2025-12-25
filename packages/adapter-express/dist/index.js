@@ -20,10 +20,10 @@ export function createExpressMiddleware({ router }) {
                 return;
             }
             const procDef = procedure;
-            // Validate input
-            const input = req.body;
-            const parsedInput = procDef.input.parse(input);
-            const result = await procDef.resolver({ input: parsedInput });
+            // Extract input and project from body
+            const { input, project } = req.body;
+            // Delegate validation and projection to the Core Procedure
+            const result = await procDef.call({ input, project });
             res.json(result);
         }
         catch (err) {

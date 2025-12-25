@@ -30,11 +30,11 @@ export function createExpressMiddleware({ router }: { router: Router }) {
 
             const procDef = procedure as ProcedureDef;
 
-            // Validate input
-            const input = req.body;
-            const parsedInput = procDef.input.parse(input);
+            // Extract input and project from body
+            const { input, project } = req.body;
 
-            const result = await procDef.resolver({ input: parsedInput });
+            // Delegate validation and projection to the Core Procedure
+            const result = await procDef.call({ input, project });
 
             res.json(result);
 
