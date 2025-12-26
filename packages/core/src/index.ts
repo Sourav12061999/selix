@@ -10,3 +10,5 @@ export const initSelix = () => new Selix();
 
 export * from './procedure';
 export * from './router';
+export * from './SelixError';
+

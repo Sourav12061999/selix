@@ -1,6 +1,6 @@
-
 import { z, ZodType } from "zod";
 import { applyProjection } from './projection';
+import { getErrorFromUnknown, SELIX_HTTP_STATUS_MAP, SelixError } from "./SelixError";
 
 export type ProcedureType = 'query' | 'mutation';
 
@@ -22,14 +22,30 @@ export class ProcedureDef<InputType = any, OutputType = any> {
     }
 
     async call(opts: { input: any; project?: any }) {
-        const parsedInput = this.input.parse(opts.input);
-        const result = await this.resolver({ input: parsedInput });
+        try {
+            const parsedInput = this.input.parse(opts.input);
+            const result = await this.resolver({ input: parsedInput });
 
-        if (opts.project) {
-            return applyProjection(result, opts.project);
+            if (opts.project) {
+                return {
+                    ok: true as const,
+                    data: applyProjection(result, opts.project)
+                };
+            }
+
+            return {
+                ok: true as const,
+                data: result
+            };
+        } catch (cause) {
+            const error = getErrorFromUnknown(cause);
+            const status = SELIX_HTTP_STATUS_MAP[error.code] ?? 500;
+            return {
+                ok: false as const,
+                error,
+                status
+            };
         }
-
-        return result;
     }
 }
 

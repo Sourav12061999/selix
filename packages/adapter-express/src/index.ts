@@ -36,10 +36,14 @@ export function createExpressMiddleware({ router }: { router: Router }) {
             // Delegate validation and projection to the Core Procedure
             const result = await procDef.call({ input, project });
 
-            res.json(result);
+            if (!result.ok) {
+                res.status(result.status).json({ error: result.error.message });
+                return;
+            }
+
+            res.json(result.data);
 
         } catch (err: any) {
-            console.error(err);
             res.status(500).json({ error: err.message });
         }
     };

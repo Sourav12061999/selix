@@ -5,6 +5,18 @@ import { z } from 'zod';
 
 const t = initSelix();
 
+
+const userRouter = t.router({
+    getUser: t.procedure
+        .input(z.object({ id: z.string() }))
+        .query(({ input }) => {
+            return {
+                id: input.id,
+                name: 'John Doe'
+            };
+        })
+})
+
 export const appRouter = t.router({
     hello: t.procedure
         .input(z.object({ name: z.string() }))
@@ -20,7 +32,8 @@ export const appRouter = t.router({
             return {
                 result: input.a + input.b
             };
-        })
+        }),
+    userRouter,
 });
 
 export type AppRouter = typeof appRouter;

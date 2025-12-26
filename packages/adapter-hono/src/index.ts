@@ -29,13 +29,32 @@ export function createHonoMiddleware(router: Router) {
 
             const procDef = procedure as ProcedureDef;
 
-            // Validate input
-            const input = await c.req.json().catch(() => ({})); // Handle empty body safely
-            const parsedInput = procDef.input.parse(input);
+            // Delegate validation and projection to the Core Procedure
+            const input = await c.req.json().catch(() => ({}));
+            // We need to parse project from body if available, similar to express adapter
+            // Assuming input and project are at root of body for now, but previous Hono code assumed body IS input.
+            // Let's checking if we can support that.
+            // For now, let's assume the body structure is { input, project } if we want projection, 
+            // OR just pure input if no projection. 
+            // But to be consistent with Express adapter which does const { input, project } = req.body;
 
-            const result = await procDef.resolver({ input: parsedInput });
+            // Let's stick to the Express adapter pattern for consistency in this refactor.
+            const body = input; // input read above
+            const procInput = body.input !== undefined ? body.input : body;
+            // Wait, if body is { input: ... }, we use it. If not, maybe the whole body is input?
+            // The express adapter explicitly destructured { input, project } = req.body.
+            // If the user sends { foo: "bar" }, express adapter would see input=undefined.
+            // So we should strictly follow { input, project } structure for now to match Express adapter until further clarification.
 
-            return c.json(result);
+            const { input: callInput, project } = body;
+
+            const result = await procDef.call({ input: callInput, project });
+
+            if (!result.ok) {
+                return c.json({ error: result.error.message }, result.status as any);
+            }
+
+            return c.json(result.data);
 
         } catch (err: any) {
             console.error(err);
