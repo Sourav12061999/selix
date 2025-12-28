@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { applyProjection } from './projection';
+import { getErrorFromUnknown, SELIX_HTTP_STATUS_MAP } from "./SelixError";
 export class ProcedureDef {
     type;
     input;
@@ -10,12 +11,29 @@ export class ProcedureDef {
         this.resolver = resolver;
     }
     async call(opts) {
-        const parsedInput = this.input.parse(opts.input);
-        const result = await this.resolver({ input: parsedInput });
-        if (opts.project) {
-            return applyProjection(result, opts.project);
+        try {
+            const parsedInput = this.input.parse(opts.input);
+            const result = await this.resolver({ input: parsedInput });
+            if (opts.project) {
+                return {
+                    ok: true,
+                    data: applyProjection(result, opts.project)
+                };
+            }
+            return {
+                ok: true,
+                data: result
+            };
         }
-        return result;
+        catch (cause) {
+            const error = getErrorFromUnknown(cause);
+            const status = SELIX_HTTP_STATUS_MAP[error.code] ?? 500;
+            return {
+                ok: false,
+                error,
+                status
+            };
+        }
     }
 }
 export class ProcedureBuilder {

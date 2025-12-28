@@ -1,4 +1,5 @@
 import { z, ZodType } from "zod";
+import { SelixError } from "./SelixError";
 export type ProcedureType = 'query' | 'mutation';
 export type ProcedureResolver<InputType, OutputType> = (opts: {
     input: InputType;
@@ -11,7 +12,17 @@ export declare class ProcedureDef<InputType = any, OutputType = any> {
     call(opts: {
         input: any;
         project?: any;
-    }): Promise<any>;
+    }): Promise<{
+        ok: true;
+        data: any;
+        error?: undefined;
+        status?: undefined;
+    } | {
+        ok: false;
+        error: SelixError;
+        status: number;
+        data?: undefined;
+    }>;
 }
 export declare class ProcedureBuilder<InputType = any> {
     private _input?;

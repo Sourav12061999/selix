@@ -1,39 +1,60 @@
-import { Router, ProcedureDef } from '@selix/core';
+import { Router, ProcedureDef, getProcedure } from '@selix/core';
 import type { Request, Response, NextFunction } from 'express';
 
 export function createExpressMiddleware({ router }: { router: Router }) {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { path } = req;
-            // Remove leading slash and split by dot if nested (nested routers not fully impl yet but handle flat for now)
-            // Actually my client sends /procedureName.
-            // req.path in express when mounted on /api, and called /api/hello, is /hello.
-
             const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-            const procedureName = cleanPath;
+            const segments = cleanPath.split('/');
 
-            const procedure = router._def.procedures[procedureName];
+            const procedure = getProcedure(router, segments);
 
             if (!procedure) {
                 res.status(404).json({ error: 'Procedure not found' });
                 return;
             }
 
-            // Check if it's a procedure or a router (nested routers todo)
-            // For now assume flat router
+            const procDef = procedure as ProcedureDef;
 
-            if ('_def' in procedure) {
-                // Nested router, not supported in this simple version yet
-                res.status(501).json({ error: 'Nested routers not yet supported in adapter' });
+            // Validate Method
+            if (procDef.type === 'query' && req.method !== 'GET') {
+                res.status(405).json({ error: 'Method Not Allowed. Queries must be GET.' });
+                return;
+            }
+            if (procDef.type === 'mutation' && req.method !== 'POST') {
+                res.status(405).json({ error: 'Method Not Allowed. Mutations must be POST.' });
                 return;
             }
 
-            const procDef = procedure as ProcedureDef;
+            let input: any;
+            let project: any;
 
-            // Extract input and project from body
-            const { input, project } = req.body;
+            if (procDef.type === 'query') {
+                // Parse from Query String
+                const queryInput = req.query.input;
+                const queryProject = req.query.project;
 
-            // Delegate validation and projection to the Core Procedure
+                try {
+                    input = (queryInput && typeof queryInput === 'string') ? JSON.parse(queryInput) : undefined;
+                } catch (e) {
+                    res.status(400).json({ error: 'Invalid JSON in input query param' });
+                    return;
+                }
+
+                try {
+                    project = (queryProject && typeof queryProject === 'string') ? JSON.parse(queryProject) : undefined;
+                } catch (e) {
+                    res.status(400).json({ error: 'Invalid JSON in project query param' });
+                    return;
+                }
+
+            } else {
+                // Parse from Body
+                input = req.body.input;
+                project = req.body.project;
+            }
+
             const result = await procDef.call({ input, project });
 
             if (!result.ok) {

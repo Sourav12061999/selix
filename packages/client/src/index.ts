@@ -33,17 +33,39 @@ export function createClient<TRouter extends Router>(opts: { url: string }): Cre
                 return createProxy(path);
             },
             apply(_target, _thisArg, args) {
-                const type = path[path.length - 1]; // query or mutation
-                const actualPath = path.slice(0, -1).join('.');
-                const data = args[0];
+                const type = path[path.length - 1] as 'query' | 'mutation';
+                const actualPath = path.slice(0, -1).join('/');
+                const inputWrapper = args[0] || {};
+                const { input, project } = inputWrapper;
 
-                return fetch(`${url}/${actualPath}?type=${type}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                }).then(res => res.json());
+                if (type === 'query') {
+                    const queryParts: string[] = [];
+                    if (input !== undefined) {
+                        queryParts.push(`input=${encodeURIComponent(JSON.stringify(input))}`);
+                    }
+                    if (project !== undefined) {
+                        queryParts.push(`project=${encodeURIComponent(JSON.stringify(project))}`);
+                    }
+
+                    const queryString = queryParts.join('&');
+                    const fullUrl = queryString ? `${url}/${actualPath}?${queryString}` : `${url}/${actualPath}`;
+
+                    return fetch(fullUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(res => res.json());
+                } else {
+                    // Mutation -> POST
+                    return fetch(`${url}/${actualPath}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(inputWrapper),
+                    }).then(res => res.json());
+                }
             }
         });
     };

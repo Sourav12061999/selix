@@ -6,4 +6,5 @@ export declare class Selix {
 export declare const initSelix: () => Selix;
 export * from './procedure';
 export * from './router';
+export * from './SelixError';
 //# sourceMappingURL=index.d.ts.map
