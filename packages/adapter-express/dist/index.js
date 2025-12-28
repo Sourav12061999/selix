@@ -1,5 +1,5 @@
 import { getProcedure } from '@selix/core';
-export function createExpressMiddleware({ router }) {
+export function createExpressMiddleware({ router, createContext }) {
     return async (req, res, next) => {
         try {
             const { path } = req;
@@ -46,7 +46,8 @@ export function createExpressMiddleware({ router }) {
                 input = req.body.input;
                 project = req.body.project;
             }
-            const result = await procDef.call({ input, project });
+            const ctx = createContext ? await createContext({ req, res }) : {};
+            const result = await procDef.call({ input, project, ctx });
             if (!result.ok) {
                 res.status(result.status).json({ error: result.error.message });
                 return;

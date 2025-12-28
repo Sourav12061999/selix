@@ -1,7 +1,13 @@
 import { Router, ProcedureDef, getProcedure } from '@selix/core';
 import type { Request, Response, NextFunction } from 'express';
 
-export function createExpressMiddleware({ router }: { router: Router }) {
+export function createExpressMiddleware({
+    router,
+    createContext
+}: {
+    router: Router;
+    createContext?: (opts: { req: Request; res: Response }) => Promise<any> | any;
+}) {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { path } = req;
@@ -55,7 +61,9 @@ export function createExpressMiddleware({ router }: { router: Router }) {
                 project = req.body.project;
             }
 
-            const result = await procDef.call({ input, project });
+            const ctx = createContext ? await createContext({ req, res }) : {};
+
+            const result = await procDef.call({ input, project, ctx });
 
             if (!result.ok) {
                 res.status(result.status).json({ error: result.error.message });

@@ -1,6 +1,6 @@
 import { router } from "./router";
 export declare class Selix {
-    procedure: import("./procedure").ProcedureBuilder<any>;
+    procedure: import("./procedure").ProcedureBuilder<any, any>;
     router: typeof router;
 }
 export declare const initSelix: () => Selix;
