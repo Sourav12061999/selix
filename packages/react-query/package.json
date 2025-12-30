@@ -2,8 +2,20 @@
     "name": "@selix/react-query",
     "version": "0.1.0",
     "type": "module",
-    "main": "./src/index.tsx",
-    "types": "./src/index.tsx",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "build": "tsc"
     },

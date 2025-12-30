@@ -13,10 +13,13 @@
     "example:frontend:react": "bun run --cwd examples/frontend-react dev",
     "example:frontend:solid": "bun run --cwd examples/frontend-solid dev",
     "example:frontend:vue": "bun run --cwd examples/frontend-vue dev",
-    "example:frontend:svelte": "bun run --cwd examples/frontend-svelte dev"
+    "example:frontend:svelte": "bun run --cwd examples/frontend-svelte dev",
+    "changeset": "changeset",
+    "release": "changeset publish"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@changesets/cli": "^2.29.8",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   }
 }
