@@ -16,15 +16,15 @@
 The monorepo consists of several packages:
 
 ### Core
-- **`@selix/core`**: The core runtime and router builder.
+- **[`@selix/core`](./packages/core)**: The core runtime and router builder.
 
 ### Adapters
-- **`@selix/adapter-express`**: Adapter for Express.js.
-- **`@selix/adapter-hono`**: Adapter for Hono.
+- **[`@selix/adapter-express`](./packages/adapter-express)**: Adapter for Express.js.
+- **[`@selix/adapter-hono`](./packages/adapter-hono)**: Adapter for Hono.
 
 ### Client & Integrations
-- **`@selix/client`**: The vanilla client for Selix.
-- **`@selix/react-query`**: TanStack Query adapter for React.
+- **[`@selix/client`](./packages/client)**: The vanilla client for Selix.
+- **[`@selix/react-query`](./packages/react-query)**: TanStack Query adapter for React.
 - **`@selix/solid-query`**: TanStack Query adapter for Solid.
 - **`@selix/vue-query`**: TanStack Query adapter for Vue.
 - **`@selix/svelte-query`**: TanStack Query adapter for Svelte.
