@@ -1,0 +1,24 @@
+{
+    "name": "frontend-svelte",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "check": "svelte-check --tsconfig ./tsconfig.json"
+    },
+    "dependencies": {
+        "@selix/client": "workspace:*",
+        "@selix/svelte-query": "workspace:*",
+        "@tanstack/svelte-query": "^5.0.0",
+        "svelte": "^4.0.0"
+    },
+    "devDependencies": {
+        "@sveltejs/vite-plugin-svelte": "^2.4.2",
+        "typescript": "^5.0.0",
+        "svelte-check": "^3.4.3",
+        "vite": "^4.0.0",
+        "backend-express": "workspace:*"
+    }
+}

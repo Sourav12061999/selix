@@ -7,7 +7,13 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "bun run --cwd packages/core build && bun run --cwd packages/adapter-express build && bun run --cwd packages/client build"
+    "build": "bun run --cwd packages/core build && bun run --cwd packages/adapter-express build && bun run --cwd packages/client build",
+    "example:backend:hono": "bun run --cwd examples/backend-hono dev",
+    "example:backend:express": "bun run --cwd examples/backend-express dev",
+    "example:frontend:react": "bun run --cwd examples/frontend-react dev",
+    "example:frontend:solid": "bun run --cwd examples/frontend-solid dev",
+    "example:frontend:vue": "bun run --cwd examples/frontend-vue dev",
+    "example:frontend:svelte": "bun run --cwd examples/frontend-svelte dev"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

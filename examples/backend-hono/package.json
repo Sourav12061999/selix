@@ -1,0 +1,19 @@
+{
+    "name": "backend-hono",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "bun run --watch src/index.ts",
+        "start": "bun run src/index.ts"
+    },
+    "dependencies": {
+        "@selix/core": "workspace:*",
+        "@selix/adapter-hono": "workspace:*",
+        "hono": "^4.11.2",
+        "zod": "^3.22.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    }
+}

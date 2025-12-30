@@ -1,0 +1,22 @@
+{
+    "name": "frontend-solid",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview"
+    },
+    "dependencies": {
+        "@selix/client": "workspace:*",
+        "@selix/solid-query": "workspace:*",
+        "@tanstack/solid-query": "^5.0.0",
+        "solid-js": "^1.8.0"
+    },
+    "devDependencies": {
+        "vite": "^5.0.0",
+        "vite-plugin-solid": "^2.8.0",
+        "typescript": "^5.3.0",
+        "backend-express": "workspace:*"
+    }
+}
