@@ -2,8 +2,8 @@ import { createContext, useContext, JSX } from 'solid-js';
 import {
     createQuery as __createQuery,
     createMutation as __createMutation,
-    CreateQueryOptions,
-    CreateMutationOptions
+    SolidQueryOptions,
+    SolidMutationOptions
 } from '@tanstack/solid-query';
 import type { Router, AnyProcedure } from '@selix/core';
 import type { InferProcedureInput, InferProcedureOutput, CreateClient } from '@selix/client';
@@ -15,7 +15,7 @@ type VanillaClient<TRouter extends Router> = CreateClient<TRouter>;
 const SelixContext = createContext<VanillaClient<any> | null>(null);
 
 export function SelixProvider<TRouter extends Router>(props: {
-    client: VanillaClient<TRouter>,
+    client: CreateClient<TRouter>,
     children: JSX.Element
 }) {
     return (
@@ -35,11 +35,11 @@ export function useSelixContext<TRouter extends Router>() {
 
 export type DecoratedProcedure<TProcedure extends AnyProcedure> = {
     createQuery: <TData = ProcedureOutput<TProcedure>>(
-        getOptions: () => { input: ProcedureInput<TProcedure>, project?: any } & Omit<CreateQueryOptions<ProcedureOutput<TProcedure>, Error, TData>, 'queryKey' | 'queryFn'>
+        getOptions: () => { input: ProcedureInput<TProcedure>, project?: any } & Omit<SolidQueryOptions<ProcedureOutput<TProcedure>, Error, TData>, 'queryKey' | 'queryFn'>
     ) => any;
 
     createMutation: <TContext = unknown>(
-        options?: CreateMutationOptions<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>
+        options?: SolidMutationOptions<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>
     ) => any;
 };
 

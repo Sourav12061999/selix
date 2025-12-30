@@ -19,14 +19,14 @@ type ProcedureOutput<T> = T extends AnyProcedure ? InferProcedureOutput<T> : nev
 // Type for the vanilla client created by @selix/client
 type VanillaClient<TRouter extends Router> = CreateClient<TRouter>;
 
-const SelixContext = createContext<VanillaClient<any> | null>(null);
+const SelixContext = createContext<any>(null);
 
 export function SelixProvider<TRouter extends Router>({
     client,
     children,
     queryClient
 }: {
-    client: VanillaClient<TRouter>,
+    client: CreateClient<TRouter>,
     children: React.ReactNode,
     queryClient?: QueryClient
 }) {
