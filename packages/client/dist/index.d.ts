@@ -18,5 +18,6 @@ export type CreateClient<TRouter extends Router> = {
 export * from './proxy';
 export declare function createClient<TRouter extends Router>(opts: {
     url: string;
+    debugMode?: boolean;
 }): CreateClient<TRouter>;
 //# sourceMappingURL=index.d.ts.map
