@@ -15,8 +15,8 @@ type DecorateProcedure<TProcedure> = {
 export type CreateClient<TRouter extends Router> = {
     [K in keyof TRouter['_def']['procedures']]: TRouter['_def']['procedures'][K] extends Router ? CreateClient<TRouter['_def']['procedures'][K]> : DecorateProcedure<TRouter['_def']['procedures'][K]>;
 };
+export * from './proxy';
 export declare function createClient<TRouter extends Router>(opts: {
     url: string;
 }): CreateClient<TRouter>;
-export {};
 //# sourceMappingURL=index.d.ts.map
