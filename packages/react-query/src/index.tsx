@@ -4,6 +4,8 @@ import {
     useMutation as __useMutation,
     UseQueryOptions,
     UseMutationOptions,
+    UseQueryResult,
+    UseMutationResult,
     QueryClient
 } from '@tanstack/react-query';
 import type { Router, AnyProcedure } from '@selix/core';
@@ -50,11 +52,11 @@ export type DecoratedProcedure<TProcedure extends AnyProcedure> = {
     useQuery: <TData = ProcedureOutput<TProcedure>>(
         input: { input: ProcedureInput<TProcedure>, project?: any },
         opts?: Omit<UseQueryOptions<ProcedureOutput<TProcedure>, Error, TData>, 'queryKey' | 'queryFn'>
-    ) => any; // Return type of useQuery
+    ) => UseQueryResult<TData, Error>;
 
     useMutation: <TContext = unknown>(
         opts?: UseMutationOptions<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>
-    ) => any; // Return type of useMutation
+    ) => UseMutationResult<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>;
 };
 
 export type DecoratedRouter<TRouter extends Router> = {

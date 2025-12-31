@@ -3,7 +3,9 @@ import {
     createQuery as __createQuery,
     createMutation as __createMutation,
     SolidQueryOptions,
-    SolidMutationOptions
+    SolidMutationOptions,
+    UseQueryResult,
+    UseMutationResult
 } from '@tanstack/solid-query';
 import type { Router, AnyProcedure } from '@selix/core';
 import type { InferProcedureInput, InferProcedureOutput, CreateClient } from '@selix/client';
@@ -36,11 +38,11 @@ export function useSelixContext<TRouter extends Router>() {
 export type DecoratedProcedure<TProcedure extends AnyProcedure> = {
     createQuery: <TData = ProcedureOutput<TProcedure>>(
         getOptions: () => { input: ProcedureInput<TProcedure>, project?: any } & Omit<SolidQueryOptions<ProcedureOutput<TProcedure>, Error, TData>, 'queryKey' | 'queryFn'>
-    ) => any;
+    ) => UseQueryResult<TData, Error>;
 
     createMutation: <TContext = unknown>(
         options?: SolidMutationOptions<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>
-    ) => any;
+    ) => UseMutationResult<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>;
 };
 
 export type DecoratedRouter<TRouter extends Router> = {

@@ -3,7 +3,9 @@ import {
     useQuery as __useQuery,
     useMutation as __useMutation,
     UseQueryOptions,
-    UseMutationOptions
+    UseMutationOptions,
+    UseQueryReturnType,
+    UseMutationReturnType
 } from '@tanstack/vue-query';
 import type { Router, AnyProcedure } from '@selix/core';
 import type { InferProcedureInput, InferProcedureOutput, CreateClient } from '@selix/client';
@@ -30,11 +32,11 @@ export type DecoratedProcedure<TProcedure extends AnyProcedure> = {
     useQuery: <TData = ProcedureOutput<TProcedure>>(
         input: { input: ProcedureInput<TProcedure>, project?: any },
         opts?: Omit<UseQueryOptions<ProcedureOutput<TProcedure>, Error, TData>, 'queryKey' | 'queryFn'>
-    ) => any;
+    ) => UseQueryReturnType<TData, Error>;
 
     useMutation: <TContext = unknown>(
         opts?: UseMutationOptions<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>
-    ) => any;
+    ) => UseMutationReturnType<ProcedureOutput<TProcedure>, Error, { input: ProcedureInput<TProcedure>, project?: any }, TContext>;
 };
 
 export type DecoratedRouter<TRouter extends Router> = {
